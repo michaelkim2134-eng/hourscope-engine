@@ -32,4 +32,7 @@ USER engine
 
 EXPOSE 8000
 # Hosts set $PORT; 8000 otherwise. ENGINE_API_KEY must be set in production (the engine refuses to start without it).
-CMD ["sh", "-c", "uvicorn hourscope_engine.api:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --no-server-header"]
+# Chart maths is CPU-bound and Python runs one calculation at a time per process, so several worker processes
+# are needed to serve people in parallel (load test 2026-11-18: one worker capped at ~10 day reports a second).
+# Each worker uses about 175 MB. WEB_CONCURRENCY overrides the count; match it to the host's vCPUs.
+CMD ["sh", "-c", "uvicorn hourscope_engine.api:app --host 0.0.0.0 --port ${PORT:-8000} --workers ${WEB_CONCURRENCY:-4} --proxy-headers --no-server-header"]
