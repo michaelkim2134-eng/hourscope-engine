@@ -1,0 +1,27 @@
+[project]
+name = "hourscope-engine"
+version = "0.1.0"
+description = "Hourscope Ephemeris Engine: natal charts (Western and Vedic), time zones, place lookup"
+requires-python = ">=3.11"
+dependencies = [
+    "pyswisseph>=2.10",
+    "tzdata",
+    "timezonefinder>=6",
+    "geonamescache>=2",
+    "fastapi>=0.110",
+    "uvicorn>=0.30",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx", "pymeeus>=0.5"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
